@@ -109,6 +109,8 @@ def create_mcp_server(settings: Settings) -> FastMCP:
             "blast_id to review results."
         ),
         transport_security=TransportSecuritySettings(enable_dns_rebinding_protection=False),
+        stateless_http=True,
+        json_response=True,
     )
 
     client_factory: Callable[[], CustomerThermometerClient | None] = (
