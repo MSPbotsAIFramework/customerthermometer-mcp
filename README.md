@@ -109,12 +109,12 @@ scoped "sub-API keys"). MSPbots' own integration also stores the API host
 (`api_url`) as a per-tenant field, so this server treats it as per-request
 too rather than a fixed default.
 
-### HEADER 授权参数说明
+### HEADER Authorization Parameters
 
-| Header | 类型 | 是否必填 | 默认值 | 枚举值 | 字段描述 | Example |
+| Header | Type | Required | Default | Allowed values | Description | Example |
 |---|---|---|---|---|---|---|
-| `X-CustomerThermometer-Api-Key` | string | 是 | 无 | 无 | Customer Thermometer API Key，转发为上游 `apiKey` 查询参数 | `a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6` |
-| `X-CustomerThermometer-Api-Url` | string | 是 | 无 | 无 | API 主机地址（不带协议前缀也可，自动补 `https://`） | `app.customerthermometer.com/api.php` |
+| `X-CustomerThermometer-Api-Key` | string | Yes | None | None | Customer Thermometer API Key, forwarded as the upstream `apiKey` query parameter | `a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6` |
+| `X-CustomerThermometer-Api-Url` | string | Yes | None | None | API host address (the protocol prefix may be omitted; `https://` is added automatically) | `app.customerthermometer.com/api.php` |
 
 Missing either header returns `401`:
 ```json
@@ -128,10 +128,10 @@ Missing either header returns `401`:
 
 ## Environment Variables
 
-| Variable | 类型 | 是否必填 | 默认值 | 说明 |
+| Variable | Type | Required | Default | Description |
 |---|---|---|---|---|
-| `MCP_HTTP_PORT` | int | 否 | `8080` | HTTP 监听端口 |
-| `MCP_HTTP_HOST` | string | 否 | `0.0.0.0` | HTTP 监听地址 |
+| `MCP_HTTP_PORT` | int | No | `8080` | HTTP listen port |
+| `MCP_HTTP_HOST` | string | No | `0.0.0.0` | HTTP listen address |
 
 (No `*_BASE_URL` env var — the API host is per-tenant and always supplied
 via the `X-CustomerThermometer-Api-Url` header, never a fixed default.)
@@ -153,23 +153,23 @@ back as a quoted JSON string containing that XML) rather than re-parsed into
 a different shape. Errors use the SOP's fixed envelope
 `{"error": {"code", "message", "retryable"}}` instead of ad-hoc strings.
 
-| Tool | Read/Write | 功能 | 参数 |
+| Tool | Read/Write | Description | Parameters |
 |---|---|---|---|
-| `customerthermometer_get_thermometers` | readOnly | 列出所有 Thermometer 名称和 ID | 无 |
-| `customerthermometer_get_recipient_lists` | readOnly | 列出所有收件人 List 名称和 ID | 无 |
-| `customerthermometer_get_send_quota` | readOnly | 获取剩余可发送额度 | 无 |
-| `customerthermometer_get_happiness_value` | readOnly | 获取 Happiness Factor（%） | `limit`, `blast_id`, `from_date`, `to_date`（均可选） |
-| `customerthermometer_get_nps_value` | readOnly | 获取 NPS 分数 | `limit`, `blast_id`, `from_date`, `to_date`（均可选） |
-| `customerthermometer_get_temp_rating_value` | readOnly | 获取 Temperature Rating（%） | `limit`, `blast_id`, `from_date`, `to_date`（均可选） |
-| `customerthermometer_get_response_rate_value` | readOnly | 获取回复率（%） | `limit`, `blast_id`, `from_date`, `to_date`（均可选） |
-| `customerthermometer_get_num_responses_value` | readOnly | 获取回复数量 | `temperature_id`, `limit`, `blast_id`, `from_date`, `to_date`（均可选） |
-| `customerthermometer_get_blast_results` | readOnly | 获取详细回复结果 | `temperature_id`, `limit`, `blast_id`, `from_date`, `to_date`（均可选） |
-| `customerthermometer_get_comments` | readOnly | 获取回复评论 | `temperature_id`, `limit`, `blast_id`, `from_date`, `to_date`（均可选） |
-| `customerthermometer_send_email` | write | 发送单封 Email Thermometer 调查 | `thermometer_id`(必填), `list_id`(必填), `email_address`(必填), `blast_id`/`first_name`/`last_name`/`company_name`/`custom1-3`（可选） |
-| `customerthermometer_log_response` | write | 手动登记一条回复 | `recipient`/`temperature_id`/`thermometer_id`(必填), 其余均可选 |
-| `customerthermometer_add_recipient_to_list` | write | 添加收件人到 List | `email_address`/`list_id`(必填), `first_name`/`last_name`/`company_name`（可选） |
-| `customerthermometer_delete_response` | write, ⚠ destructive | 删除一条回复（30 天后彻底清除） | `response_id`(必填) |
-| `customerthermometer_unsubscribe_recipient` | write | 将邮箱加入退订名单 | `email_address`(必填), `notify`（可选） |
+| `customerthermometer_get_thermometers` | readOnly | List all Thermometer names and IDs | None |
+| `customerthermometer_get_recipient_lists` | readOnly | List all recipient List names and IDs | None |
+| `customerthermometer_get_send_quota` | readOnly | Get the remaining send quota | None |
+| `customerthermometer_get_happiness_value` | readOnly | Get the Happiness Factor (%) | `limit`, `blast_id`, `from_date`, `to_date` (all optional) |
+| `customerthermometer_get_nps_value` | readOnly | Get the NPS score | `limit`, `blast_id`, `from_date`, `to_date` (all optional) |
+| `customerthermometer_get_temp_rating_value` | readOnly | Get the Temperature Rating (%) | `limit`, `blast_id`, `from_date`, `to_date` (all optional) |
+| `customerthermometer_get_response_rate_value` | readOnly | Get the response rate (%) | `limit`, `blast_id`, `from_date`, `to_date` (all optional) |
+| `customerthermometer_get_num_responses_value` | readOnly | Get the number of responses | `temperature_id`, `limit`, `blast_id`, `from_date`, `to_date` (all optional) |
+| `customerthermometer_get_blast_results` | readOnly | Get detailed response results | `temperature_id`, `limit`, `blast_id`, `from_date`, `to_date` (all optional) |
+| `customerthermometer_get_comments` | readOnly | Get response comments | `temperature_id`, `limit`, `blast_id`, `from_date`, `to_date` (all optional) |
+| `customerthermometer_send_email` | write | Send a single Email Thermometer survey | `thermometer_id` (required), `list_id` (required), `email_address` (required), `blast_id`/`first_name`/`last_name`/`company_name`/`custom1-3` (optional) |
+| `customerthermometer_log_response` | write | Manually log a response | `recipient`/`temperature_id`/`thermometer_id` (required), all others optional |
+| `customerthermometer_add_recipient_to_list` | write | Add a recipient to a List | `email_address`/`list_id` (required), `first_name`/`last_name`/`company_name` (optional) |
+| `customerthermometer_delete_response` | write, ⚠ destructive | Delete a response (permanently purged after 30 days) | `response_id` (required) |
+| `customerthermometer_unsubscribe_recipient` | write | Add an email address to the unsubscribe list | `email_address` (required), `notify` (optional) |
 
 All 7 tools that accept `limit` (`get_happiness_value`, `get_nps_value`,
 `get_temp_rating_value`, `get_response_rate_value`,
@@ -179,7 +179,7 @@ own — a vendor support-doc example shows `&limit=100000` being accepted — so
 this 200 cap is this server's own SOP-mandated ceiling (protecting the
 agent's context budget), not a vendor-imposed limit.
 
-## 测试示例
+## Test Example
 
 ```bash
 # Health check
